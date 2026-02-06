@@ -1,154 +1,108 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <title>Özer Aşireti Yapay Zekâsı</title>
-  <style>
-    :root {
-      --bg: #0f1115;
-      --card: #1b1f2a;
-      --gold: #d4af37;
-      --text: #eaeaea;
-      --user: #2b2f3a;
-      --ai: #1e3a2f;
-    }
-
-    body {
-      margin: 0;
-      background: radial-gradient(circle at top, #1a1d26, #0f1115);
-      font-family: "Segoe UI", sans-serif;
-      color: var(--text);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-
-    .chat {
-      width: 420px;
-      max-width: 95%;
-      height: 600px;
-      background: var(--card);
-      border-radius: 16px;
-      box-shadow: 0 0 30px rgba(212,175,55,0.15);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    .header {
-      padding: 16px;
-      text-align: center;
-      border-bottom: 1px solid #2a2f3a;
-    }
-
-    .header h1 {
-      margin: 0;
-      font-size: 18px;
-      color: var(--gold);
-      letter-spacing: 1px;
-    }
-
-    .messages {
-      flex: 1;
-      padding: 16px;
-      overflow-y: auto;
-    }
-
-    .msg {
-      margin-bottom: 12px;
-      max-width: 80%;
-      padding: 10px 14px;
-      border-radius: 12px;
-      font-size: 14px;
-      line-height: 1.4;
-    }
-
-    .user {
-      background: var(--user);
-      align-self: flex-end;
-      border-bottom-right-radius: 2px;
-    }
-
-    .ai {
-      background: var(--ai);
-      align-self: flex-start;
-      border-bottom-left-radius: 2px;
-    }
-
-    .input {
-      display: flex;
-      padding: 12px;
-      border-top: 1px solid #2a2f3a;
-      gap: 8px;
-    }
-
-    input {
-      flex: 1;
-      background: #0f1115;
-      border: 1px solid #2a2f3a;
-      color: var(--text);
-      padding: 10px;
-      border-radius: 10px;
-      outline: none;
-    }
-
-    button {
-      background: linear-gradient(135deg, #d4af37, #b8962e);
-      border: none;
-      border-radius: 10px;
-      padding: 0 16px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    button:hover {
-      opacity: 0.9;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Özer Aşireti Yapay Zekâsı</title>
+<style>
+body{
+  margin:0;
+  height:100vh;
+  background:linear-gradient(135deg,#0f1115,#1b1f2a);
+  font-family:Segoe UI,sans-serif;
+  color:#eee;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+.chat{
+  width:420px;
+  height:600px;
+  background:#141722;
+  border-radius:16px;
+  display:flex;
+  flex-direction:column;
+  box-shadow:0 0 30px rgba(212,175,55,.25);
+}
+.header{
+  padding:16px;
+  text-align:center;
+  color:#d4af37;
+  font-weight:bold;
+}
+.messages{
+  flex:1;
+  padding:16px;
+  overflow-y:auto;
+}
+.msg{
+  margin-bottom:12px;
+  padding:10px 14px;
+  border-radius:12px;
+  max-width:80%;
+  font-size:14px;
+}
+.user{background:#2b2f3a;align-self:flex-end;}
+.ai{background:#1e3a2f;align-self:flex-start;}
+.input{
+  display:flex;
+  padding:12px;
+  gap:8px;
+}
+input{
+  flex:1;
+  padding:10px;
+  background:#0f1115;
+  border:1px solid #2a2f3a;
+  border-radius:10px;
+  color:#fff;
+}
+button{
+  background:linear-gradient(135deg,#d4af37,#b8962e);
+  border:none;
+  border-radius:10px;
+  padding:0 16px;
+  font-weight:bold;
+}
+</style>
 </head>
 <body>
 
 <div class="chat">
-  <div class="header">
-    <h1>Özer Aşireti Yapay Zekâsı</h1>
-  </div>
-
+  <div class="header">Özer Aşireti Yapay Zekâsı</div>
   <div class="messages" id="messages"></div>
-
   <div class="input">
-    <input id="input" placeholder="Said Bey, buyurun..." />
+    <input id="input" placeholder="Said Bey, buyurun...">
     <button onclick="send()">Gönder</button>
   </div>
 </div>
 
 <script>
-  const messages = document.getElementById("messages");
-  const input = document.getElementById("input");
+const messages=document.getElementById("messages");
+const input=document.getElementById("input");
 
-  function add(text, cls) {
-    const div = document.createElement("div");
-    div.className = "msg " + cls;
-    div.innerText = text;
-    messages.appendChild(div);
-    messages.scrollTop = messages.scrollHeight;
-  }
+function add(text,cls){
+  const d=document.createElement("div");
+  d.className="msg "+cls;
+  d.innerText=text;
+  messages.appendChild(d);
+  messages.scrollTop=messages.scrollHeight;
+}
 
-  async function send() {
-    const text = input.value.trim();
-    if (!text) return;
-    add(text, "user");
-    input.value = "";
+async function send(){
+  const text=input.value.trim();
+  if(!text)return;
+  add(text,"user");
+  input.value="";
 
-    const res = await fetch("https://GREEN-TERM-2181OZER-AI.ozerfatime73.workers.dev", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: text })
-    });
+  const res=await fetch("https://green-term-2181ozer-ai.ozerfatime73.workers.dev/",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({message:text})
+  });
 
-    const data = await res.json();
-    add(data.reply, "ai");
-  }
+  const data=await res.json();
+  add(data.reply,"ai");
+}
 </script>
 
 </body>
