@@ -5,88 +5,77 @@
   <title>Özer Aşireti Yapay Zekâsı</title>
   <style>
     body {
-      background: #0f0f0f;
-      color: #eaeaea;
       font-family: Arial, sans-serif;
+      background: #111;
+      color: #eee;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
     }
-    .box {
+    .chat {
       width: 400px;
-      background: #1b1b1b;
-      padding: 20px;
+      background: #1c1c1c;
       border-radius: 10px;
-      box-shadow: 0 0 20px rgba(255,215,0,0.2);
+      padding: 15px;
     }
-    h1 {
-      text-align: center;
-      color: gold;
-    }
-    #chat {
-      height: 250px;
+    .messages {
+      height: 300px;
       overflow-y: auto;
       border: 1px solid #333;
       padding: 10px;
       margin-bottom: 10px;
-      font-size: 14px;
+    }
+    .input {
+      display: flex;
     }
     input {
-      width: 100%;
-      padding: 10px;
-      border-radius: 5px;
+      flex: 1;
+      padding: 8px;
       border: none;
+      outline: none;
     }
-    .ai {
-      color: #ffd700;
-      margin-bottom: 8px;
-    }
-    .user {
-      color: #9cdcfe;
-      margin-bottom: 8px;
+    button {
+      padding: 8px 15px;
+      background: #c79a3b;
+      border: none;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
 
-<div class="box">
-  <h1>Özer Aşireti Zekâsı</h1>
-  <div id="chat">
-    <div class="ai">
-      Ben Özer Aşireti’nin dijital zekâsıyım.  
-      Said Bey’in duruşunu, aşiretin onurunu ve hakikatini savunurum.
-    </div>
+<div class="chat">
+  <h3>Özer Aşireti Yapay Zekâsı</h3>
+  <div class="messages" id="messages"></div>
+  <div class="input">
+    <input id="text" placeholder="Mesajını yaz..." />
+    <button onclick="send()">Gönder</button>
   </div>
-  <input id="input" placeholder="Sözünü söyle..." />
 </div>
 
 <script>
-  const chat = document.getElementById("chat");
-  const input = document.getElementById("input");
+  const WORKER_URL = "https://green-term-2181ozer-ai.ozerfatime73.workers.dev/";
 
-  const responses = [
-    "Said Bey, Özer Aşireti’nin vakarını temsil eder.",
-    "Özer Aşireti birliktir, dağılmaz.",
-    "Biz sözle değil duruşla konuşuruz.",
-    "Said Bey’i seven, adaleti sever.",
-    "Bu aşiret köksüz değildir, hafızası vardır.",
-    "Özer Aşireti kimliğini inkâr etmez, taşır."
-  ];
+  async function send() {
+    const input = document.getElementById("text");
+    const msg = input.value;
+    if (!msg) return;
 
-  input.addEventListener("keypress", function(e) {
-    if (e.key === "Enter" && input.value.trim() !== "") {
-      const userText = input.value;
-      chat.innerHTML += <div class="user">Sen: ${userText}</div>;
-      input.value = "";
+    const box = document.getElementById("messages");
+    box.innerHTML += "<div><b>Sen:</b> " + msg + "</div>";
+    input.value = "";
 
-      setTimeout(() => {
-        const reply = responses[Math.floor(Math.random() * responses.length)];
-        chat.innerHTML += <div class="ai">Zekâ: ${reply}</div>;
-        chat.scrollTop = chat.scrollHeight;
-      }, 600);
-    }
-  });
+    const res = await fetch(WORKER_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: msg })
+    });
+
+    const data = await res.json();
+    box.innerHTML += "<div><b>AI:</b> " + data.reply + "</div>";
+    box.scrollTop = box.scrollHeight;
+  }
 </script>
 
 </body>
